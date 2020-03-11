@@ -1,8 +1,27 @@
 \documentclass[12pt, twoside]{article}
 \usepackage{jmlda}
 \newcommand{\hdir}{.}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{graphicx}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\integ}{\mathbb{Z}}
+\usepackage{bm}
+\usepackage{multicol}
+%\usepackage[
+%backend=biber,
+%style=alphabetic,
+%sorting=ynt
+%]{biblatex}
+
+%\addbibresource{Kulagin.bib}
+
+
 
 \begin{document}
+
+\nocite{*}
 
 \title
     [Шаблон статьи для публикации] % краткое название; не нужно, если полное название влезает в~колонтитул
@@ -31,6 +50,7 @@
 \linenumbers
 
 \section{Введение}
+
 В данной работе исследуется проблема динамического выравнивания многомерных временных рядов, устойчивого к локальным колебаниям сигнала.
 Временной ряд -  собранный в разные моменты времени статистический материал о значении каких-либо параметров (в простейшем случае одного исследуемого процесса). В данном случае рассматривается многомерный случай.
 
@@ -47,6 +67,8 @@
 
 $t = (t_1, t_2, ..., t_n), r = (r_1, r_2, ..., r_m)$, где $\forall i \in \{1, 2, ..., n\}\  X_i, Y_i \in \mathbb{R^K}$ и $\forall i  \in \{1, 2, ..., m\}  X_i \in \mathbb{R^K}$ - 2 многомерных временных ряда размерности $K$.
 
+Для этого рассмотрим задачу двухклассовой классификации 2 многомерных временных рядов, в которой в качестве метрики используется одна из нижеприведённых.
+
 Метрика $L_2$ между i сигналом 1 датчика и j сигналом 2 датчика: 
 
 $d(i, j) = \Sigma_{k = 1}^K(t(i, k) - r(j, k))^2$
@@ -55,204 +77,46 @@ $d(i, j) = \Sigma_{k = 1}^K(t(i, k) - r(j, k))^2$
 
 $D_{(i, j)} = d_{(i, j)} + min(D_{(i - 1, j)}, D_{(i, j - 1)}, D_{(i - 1, j - 1)})$
 
-В качестве данных предлагается рассмотреть выборку из 1000 измерений $X_1, X_2, ..., X_1000$ c пиком пробегающим от 1 до 1000 элемента, на остальных 
-точках принимаются нулевые значения, кроме точек $\{i - d, i - d + 1, ..., i, i + 1, ... i + d\}$ на них функция линейно возрастает/убывает к пику(i - пиковая). Если рассмотреть 2 временных ряда со смежными пиками, то и получим измерения с близкими максимумами.
+В качестве функционала ошибки будем использовать accuracy.
+
+Будут рассматриваться искусственно сгенерированные данные, которые жестко будут разделены по положению пика на 2 класса.
+
+Те ряды, которые имеют небольшое расстояние до пика, будут принадлежать одному классу.
+
+
+\section{Базовый эксперимент}
+
+Суть эксперимента заключается в сравнении различных метрик для сравнения многомерных временных рядов, а именно: MDTW и L2.
+
+Эксперимент проводится в 2 этапа.
+
+1.\textbf{Искусственно сгенерированные данные}, на которых можно увидеть достоинства и недостатки работы алгоритмов и предложить из улучшение.
+
+2.\textbf{Реальные данные}, на которых можно протестировать полученные алгоритмы и измерить качество.
+
+Генерация многомерных временных рядов из 1 шага проводится с помощью функций с отчётливым пиком:
+
+$sin(x)$
+
+$x^2$
+
+плотность нормального распределения
+
+В дальнейшем следует сдвиг по временной шкале семества этих функций и некоторый небольшой сдвиг максимума по шкале пространства. 
+
+$$f(x) \rightarrow f(x + a)$$
+
+Также будем масштабировать значения 
+
+$$f(x) \rightarrow f(ax)$$
+
+Суть 2 этапа заключается в проверке полученных на 1 шаге алгоритмов на реальных данных и измерением точности.
+
+В итоге будет выбран лучший алгоритм.
+
 
  
 \bibliographystyle{unsrt}
-\bibliography{Islamov}
-
-\end{document}
-
-	
-\bigskip
-\noindent
-\textbf{Ключевые слова}: \emph {ключевое слово; ключевое слово; еще ключевые слова, разделенные <<;>>}
-}
-
-\titleEng
-	[JMLDA paper template] % краткое название; не нужно, если полное название влезает в~колонтитул
-    {Machine Learning and Data Analysis journal paper template}
-\authorEng
-	[F.\,S.~Author] % список авторов (не более трех) для колонтитула; не нужен, если основной список влезает в колонтитул
-	{F.\,S.~Author, F.\,S.~Co-Author, and F.\,S.~Name} % основной список авторов, выводимый в оглавление
-    [F.\,S.~Author$^1$, F.\,S.~Co-Author$^2$, and F.\,S.~Name$^{1, 2}$] % список авторов, выводимый в заголовок; не нужен, если он не отличается от основного
-\thanksEng
-    {The research was
-     %partially
-    	 supported by the Russian Foundation for Basic Research (grants 00-00-0000 and 00-00-00001).
-    }
-\organizationEng
-    {$^1$Organization, address; $^2$Organization, address}
-\abstractEng
-    {This is the template of the paper submitted to the journal ``Machine Learning and Data Analysis''.
-		
-	\noindent
-	The title should be concise and informative. Titles are often used in information-retrieval systems. Avoid abbreviations and formulae where possible.
-	Please clearly indicate the last names and initials of each author and check that all names are accurately spelled. Present the authors' affiliation
-	addresses where the actual work was done.
-	Provide the full postal address of each affiliation, including the country name and, if available, the
-	e-mail address of each author.
-	Provide only institutional affiliation, department/division affiliation are not required.
-
-	\noindent
-	A concise and factual abstract is required.
-	The purpose of the abstract is to provide a summary~of the paper enabling the reader to decide whether or not to read the full text.
-    	The abstract should state briefly the purpose of the research, the principal results and major conclusions.
-    	An abstract is often presented separately from the article, so it must be able to stand alone.
-    	For this reason, References should be avoided, but if essential, then cite the author(s) and year(s).
-    	Also, non-standard or uncommon abbreviations should be avoided, but if essential they must be defined at their first mention in the abstract itself.
-    	The requirements on the size of the abstract is about 200--300 words.
-    	It should be provided in the next structured manner:
-	
-	\noindent
-	\textbf{Background}:	One paragraph about the problem, existent approaches and its limitations.
-	
-	\noindent
-	\textbf{Methods}: One paragraph about proposed method and its novelty.
-	
-	\noindent
-	\textbf{Results}: One paragraph about major properties of the proposed method and experiment results if applicable.
-	
-	\noindent
-	\textbf{Concluding Remarks}: One paragraph about the place of the proposed method among existent approaches.
-		
-	\noindent
-	Immediately after the abstract, provide 5-7 keywords, avoiding general and plural terms and multiple concepts (avoid, for example, ``and'', ``of'').
-	Use keywords that are specific and that reflect what is essential about the paper.
-	Use keywords from the abstract, introduction and conclusion.
-	These keywords will be used for indexing purposes.
-		
-	\noindent
-    	\textbf{Keywords}: \emph{keyword; keyword; more keywords, separated by ``;''}}
-
-%данные поля заполняются редакцией журнала
-\doi{10.21469/22233792}
-\receivedRus{01.01.2017}
-\receivedEng{January 01, 2017}
-
-\maketitle
-\linenumbers
-
-\section{Введение}
-После аннотации, но перед первым разделом,
-располагается введение, включающее в себя
-описание предметной области,
-обоснование актуальности задачи,
-краткий обзор известных результатов.
-
-\section{Название раздела}
-Данный документ демонстрирует оформление статьи,
-подаваемой в электронную систему подачи статей \url{http://jmlda.org/papers} для публикации в журнале <<Машинное обучение и анализ данных>>.
-Более подробные инструкции по~стилевому файлу \texttt{jmlda.sty} и~использованию издательской системы \LaTeXe\
-находятся в~документе \texttt{authors-guide.pdf}.
-Работу над статьёй удобно начинать с~правки \TeX-файла данного документа.
-
-Обращаем внимание, что данный документ должен быть сохранен в кодировке~\verb'UTF-8 without BOM'.
-Для смены кодировки рекомендуется пользоваться текстовыми редакторами \verb'Sublime Text' или \verb'Notepad++'.
-
-\paragraph{Название параграфа}
-Разделы и~параграфы, за исключением списков литературы, нумеруются.
-
-\section{Заключение}
-Желательно, чтобы этот раздел был, причём он не~должен дословно повторять аннотацию.
-Обычно здесь отмечают, каких результатов удалось добиться, какие проблемы остались открытыми.
-
-%%%% если имеется doi цитируемого источника, необходимо его указать, см. пример в \bibitem{article}
-%%%% DOI публикации, зарегистрированной в системе Crossref, можно получить по адресу http://www.crossref.org/guestquery/
-\begin{thebibliography}{99}
-\bibitem{book}
-    \BibAuthor{Гуссенс~М., Миттельбах~Ф., Cамарин~А.}
-    \BibTitle{Путеводитель по пакету \LaTeX\ и~его расширению \LaTeXe} / Пер. с англ.~---
-    М.:~Мир, 1999. 606~с.
-    (\BibAuthor{Goossens M., Mittelbach F., Samarin A.}
-     \BibTitle{The \LaTeX\ companion}.~--- 2nd ed.~--- Reading, MA, USA: Addison-Wesley, 1994. 528 p.)
-
-\bibitem{article}
-    \BibAuthor{Загуренко~А.\,Г., Коротовских~В.\,А., Колесников~А.\,А., Тимонов~А.\,В., Кардымов~Д.\,В.}
-    Технико-экономическая оптимизация дизайна гидроразрыва пласта~//
-    \BibJournal{Нефтяное хозяйство}, 2008. Т.~11. \No\,1. С.~54--57.
-	\BibDoi{10.3114/S187007708007}.
-
-\bibitem{webArticle}
-	\BibAuthor{Blaga~P.\,A.}
-	Commutative Diagrams with XY-pic II. Frames and Matrices~//
-	\BibJournal{PracTEX J.}, 2007. Vol.\,4.
-	URL: \BibUrl{https://tug.org/pracjourn/2007-1/blaga/blaga.pdf}.
-
-\bibitem{webResource}
-	XYpic.
-	URL: \BibUrl{http://akagi.ms.u-tokyo.ac.jp/input9.pdf}.
-	
-\bibitem{inproceedingsRus}
-	\BibAuthor{Усманов~Т.\,С., Гусманов~А.\,А., Муллагалин~И.\,З., Мухаметшина~Р.\,Ю., Червякова~А.\,Н., Свешников~А.\,В.}
-	Особенности проектирования разработки месторождений с применением гидроразрыва пласта~//
-	\BibJournal{Труды 6-го Междунар. симп. <<Новые ресурсосберегающие технологии недропользования и повышения нефтегазоотдачи>>}.~---
-	М.:~Издательство, 2007. С.~267--272.
-
-\bibitem{inproceedingsEng}
-    \BibAuthor{Author~N.}
-    Paper title~//
-    \BibJournal{10th Conference (International) on Any Science Proceedings}.~---
-    Place of publication: Publisher, 2009. P.~111--122.
-
-\bibitem{techreport}
-	\BibAuthor{Lambert~P.}
-  	\BibTitle{The title of the work}.
-  	Place of publication:~The institution that published, 1993.  Report~2.
- 	
-\end{thebibliography}
-
-%%%% если имеется doi цитируемого источника, необходимо его указать, см. пример в \bibitem{article}
-%%%% DOI публикации, зарегистрированной в системе Crossref, можно получить по адресу http://www.crossref.org/guestquery/.
-
-\maketitleSecondary
-\English
-\begin{thebibliography}{99}
-\bibitem{book}
-	\BibAuthor{Goossens,~M., F. Mittelbach, and A.~Samarin}. 1994.
-	\BibTitle{The \LaTeX\ companion}.
-	2nd ed.
-	Reading, MA: Addison-Wesley. 528 p.
-
-\bibitem{article}
-	\BibAuthor{Zagurenko,~A.\,G., V.\,A.~Korotovskikh, A.\,A.~Kolesnikov, A.\,V.~Timonov, and D.\,V.~Kardymon}. 2008.
-	Tekhniko-ekonomicheskaya optimizatsiya dizayna gidrorazryva plasta
-	[Technical and economic optimization of the design of hydraulic fracturing].
-	\BibJournal{Neftyanoe Khozyaystvo} [Oil Industry] 11(1):54--57.
-	\BibDoi{10.3114/S187007708007}. (In Russian)
-
-\bibitem{webArticle}
-	\BibAuthor{Blaga,~P.\,A.} 2007.
-	Commutative Diagrams with XY-pic II. Frames and Matrices.
-	\BibJournal{PracTEX J.}  4.
-	Available at: \BibUrl{https://tug.org/pracjourn/2007-1/blaga/blaga.pdf}
-    (accessed February 20, 2007).
-
-\bibitem{webResource}
-	XYpic.
-	Available at: \BibUrl{http://akagi.ms.u-tokyo.ac.jp/input9.pdf}
-	(accessed April 09, 2015).
-
-\bibitem{inproceedingsRus}
-	\BibAuthor{Usmanov,~T.\,S., A.\,A.~Gusmanov, I.\,Z.~Mullagalin, R.\,Yu.~Mukhametshina, A.\,N.~Chervyakova, and A.\,V.~Sveshnikov.} 2007.
-	Osobennosti proektirovaniya razrabotki mestorozhdeniy s primeneniem gidrorazryva plasta
-	[Features of the design of field development with the use of hydraulic fracturing].
-	\BibJournal{6th Symposium (International) ``New Energy Saving Subsoil Technologies and the
-	Increasing of the Oil and Gas Impact'' Proceedings}.
-	Moscow:~Publisher. 267--272. (In Russian)
-	   	
-\bibitem{inproceedingsEng}
-    \BibAuthor{Author,~N.} 2009.
-    Paper title.
-    \BibJournal{10th Conference (International) on Any Science Proceedings}.
-    Place of publication: Publisher. 111--122.
-	
-\bibitem{techreport}
-	\BibAuthor{Lambert,~P.} 1993.
-  	\BibTitle{The title of the work}.
-  	Place of publication:~The institution that published.  Report~2.
-  	     	
-\end{thebibliography}
+\bibliography{Kulagin}
 
 \end{document}
